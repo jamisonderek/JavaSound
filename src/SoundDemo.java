@@ -3,17 +3,16 @@ import javax.sound.midi.*;
 public class SoundDemo {
 
 	public static void main(String[] args) {
-		Sequence sequence = JSMusic2.initialize();		
-		Track track = JSMusic2.createTrack(sequence, 0);
-		JSMusic2.addNote(track, JSNote.C, 70, 160);
-		JSMusic2.addNote(track, JSNote.D, 170, 260);
-		JSMusic2.addNote(track, JSNote.E, 270, 360);
-		JSMusic2.addNote(track, JSNote.C, 370, 460);
-		JSMusic2.addNote(track, JSNote.C + JSNote.Octave, 470, 560);
-		JSMusic2.addNote(track, JSNote.C - JSNote.Octave, 570, 660);
-		Sequencer sequencer = JSMusic2.play(sequence);
-		JSMusic2.waitForSongDone(sequencer);
-		JSMusic2.close(sequencer);
+		JSMusicPlayer musicPlayer = new JSMusicPlayer(1);
+		musicPlayer.addNote(JSNote.C, 50);
+		musicPlayer.addNote(JSNote.D, 50);
+		musicPlayer.addNote(JSNote.E, 50);
+		musicPlayer.addNote(JSNote.C, 50);
+		musicPlayer.addNote(JSNote.C+JSNote.Octave, 50);
+		musicPlayer.addNote(JSNote.C-JSNote.Octave, 50);
+		musicPlayer.play();
+		musicPlayer.waitForSongDone();
+		musicPlayer.close();
 	}
 
 }
