@@ -2,9 +2,9 @@ import javax.sound.midi.*;
 
 public class JSMusic {
 
-	public static final int tempoBPM = 120;
-	public static final int ticksPerQuarterNote = 16;
-	public static final int velocity = 64;
+	public static final int tempoBPM = 120; // Beats per minute.
+	public static final int ticksPerQuarterNote = 16; // Ticks per quarter note.
+	public static final int velocity = 64; // How hard to press the key.
 
 	
 	public static Sequence initialize() throws InvalidMidiDataException {
@@ -15,46 +15,60 @@ public class JSMusic {
 	
 	public static Track createTrack(Sequence sequence, int instrument) throws InvalidMidiDataException  {
 		Track track = sequence.createTrack();
-		ShortMessage shortMessage = new ShortMessage();
-		// https://en.wikipedia.org/wiki/General_MIDI#Program_change_events lists the instruments.
-		shortMessage.setMessage(ShortMessage.PROGRAM_CHANGE, 0, instrument, 0);
-		MidiEvent event = new MidiEvent(shortMessage, 0); 
-		track.add(event);
+
+		// Use PROGRAM_CHANGE to select an instrument on Channel 0, starting at time 0.
+		// https://en.wikipedia.org/wiki/General_MIDI#Program_change_events lists the instruments for a program change event.
+		addMessage(track, ShortMessage.PROGRAM_CHANGE, 0, instrument, 0, 0);
+		
 		return track;
 	}
 	
 	public static void addNote(Track track, int note, int startTime, int endTime) throws InvalidMidiDataException {
-		ShortMessage onShortMessage = new ShortMessage();
-		onShortMessage.setMessage(ShortMessage.NOTE_ON, 0, note, velocity);
-		MidiEvent eventOn = new MidiEvent(onShortMessage, startTime); 
-		track.add(eventOn);
-		ShortMessage offShortMessage = new ShortMessage();
-		offShortMessage.setMessage(ShortMessage.NOTE_OFF, 0, note, velocity);
-		MidiEvent eventOff = new MidiEvent(offShortMessage, endTime);
-		track.add(eventOff);
+		// Press the note.
+		addMessage(track, ShortMessage.NOTE_ON, 0, note, velocity, startTime);
+		
+		// Release the note.
+		addMessage(track, ShortMessage.NOTE_OFF, 0, note, velocity, endTime);
+		
+		// Display the note we will play, along with the timing of the note.
 		System.out.println("Note: "+note+"\tstart: "+startTime+"\tend:"+endTime);
 	}
 
+	public static void addMessage(Track track, int command, int channel, int data1, int data2, long time) throws InvalidMidiDataException {
+		ShortMessage shortMessage = new ShortMessage();
+		shortMessage.setMessage(command, channel, data1, data2);
+		MidiEvent event = new MidiEvent(shortMessage, time);
+		track.add(event);
+	}
+	
 	public static Sequencer play(Sequence sequence) throws InvalidMidiDataException, MidiUnavailableException {
+		// Connect the sequencer to the synthesizer.
 		Sequencer sequencer = MidiSystem.getSequencer();
-		Synthesizer synthesizer = MidiSystem.getSynthesizer();
 		sequencer.open();
+		Synthesizer synthesizer = MidiSystem.getSynthesizer();
 		synthesizer.open();
-		sequencer.getTransmitter().setReceiver(synthesizer.getReceiver());	
-		sequencer.setSequence(sequence);
-		sequencer.setTempoInBPM(tempoBPM);
-		sequencer.start();		
+		Receiver receiver = synthesizer.getReceiver();
+		Transmitter transmitter = sequencer.getTransmitter(); 
+		transmitter.setReceiver(receiver);
+		
+		// Sequence the music and play it.
+		sequencer.setSequence(sequence);		
+		sequencer.setTempoInBPM(tempoBPM);		
+		sequencer.start();
+		
 		return sequencer;
 	}
 	
 	public static void waitForSongDone(Sequencer sequencer) {
+		// loop while the sequencer isRunning.		
 		for (int i=0;sequencer.isRunning();i++) {
-			// We just want to wait about 100ms.
+			// We just want to wait about 100ms before checking again, so the computer has time to play music.
 			waitForMilliseconds(100+i%2);
 		}
 	}
 
 	public static void waitForMilliseconds(int duration) {
+		// We just want to sleep for the duration, but if we get interruped for some reason we are okay being done.
 		try {
 			Thread.sleep(duration);
 		} catch (InterruptedException e) {
@@ -62,6 +76,7 @@ public class JSMusic {
 	}
 	
 	public static void close(Sequencer sequencer) {
+		// Releases any resources that might have been created while playing music. 
 		sequencer.close();
 	}
 }
