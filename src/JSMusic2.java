@@ -7,9 +7,9 @@ import javax.sound.midi.*;
 public class JSMusic2 {
 
 	/**
-	 * The beats per minute when playing the song.
+	 * The default beats per minute when playing the song.
 	 */
-	public static final int tempoBPM = JSMusic.tempoBPM;
+	public static final int DEFAULT_TEMPO_BPM = JSMusic.DEFAULT_TEMPO_BPM;
 	
 	/**
 	 * The number of ticks (change in time) for each quarter note.
@@ -74,11 +74,12 @@ public class JSMusic2 {
 	 * for the song to complete.  If you want to wait for the song to finish, you should call the
 	 * {@link #waitForSongDone(Sequencer)} method.
 	 * @param sequence is the sequence to play.
+	 * @param tempo is the speed to play the song.
 	 * @return a {@link Sequencer} object that you can use to wait for the song on.
 	 */
-	public static Sequencer play(Sequence sequence)  {
+	public static Sequencer play(Sequence sequence, int tempo)  {
 		try {
-			return JSMusic.play(sequence);
+			return JSMusic.play(sequence, tempo);
 		} catch (InvalidMidiDataException e) {
 			e.printStackTrace();
 			return null;

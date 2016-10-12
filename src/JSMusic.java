@@ -2,7 +2,7 @@ import javax.sound.midi.*;
 
 public class JSMusic {
 
-	public static final int tempoBPM = 120; // Beats per minute.
+	public static final int DEFAULT_TEMPO_BPM = 120; // Beats per minute.
 	public static final int ticksPerQuarterNote = 16; // Ticks per quarter note.
 	public static final int velocity = 64; // How hard to press the key.
 
@@ -41,7 +41,7 @@ public class JSMusic {
 		track.add(event);
 	}
 	
-	public static Sequencer play(Sequence sequence) throws InvalidMidiDataException, MidiUnavailableException {
+	public static Sequencer play(Sequence sequence, int tempo) throws InvalidMidiDataException, MidiUnavailableException {
 		// Connect the sequencer to the synthesizer.
 		Sequencer sequencer = MidiSystem.getSequencer();
 		sequencer.open();
@@ -53,7 +53,7 @@ public class JSMusic {
 		
 		// Sequence the music and play it.
 		sequencer.setSequence(sequence);		
-		sequencer.setTempoInBPM(tempoBPM);		
+		sequencer.setTempoInBPM(tempo);		
 		sequencer.start();
 		
 		return sequencer;

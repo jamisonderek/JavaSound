@@ -29,8 +29,8 @@ public class JSMusicPlayer {
 		time += numTicks;
 	}	
 
-	public void play() {
-		sequencer = JSMusic2.play(sequence);
+	public void play(int tempo) {
+		sequencer = JSMusic2.play(sequence, tempo);
 	}
 	
 	public void waitForSongDone() {
