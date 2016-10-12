@@ -63,16 +63,8 @@ public class JSMusic {
 		// loop while the sequencer isRunning.		
 		for (int i=0;sequencer.isRunning();i++) {
 			// We just want to wait about 100ms before checking again, so the computer has time to play music.
-			waitForMilliseconds(100+i%2);
+			Delay.waitForMilliseconds(100+i%2);
 		}
-	}
-
-	public static void waitForMilliseconds(int duration) {
-		// We just want to sleep for the duration, but if we get interruped for some reason we are okay being done.
-		try {
-			Thread.sleep(duration);
-		} catch (InterruptedException e) {
-		}		
 	}
 	
 	public static void close(Sequencer sequencer) {
