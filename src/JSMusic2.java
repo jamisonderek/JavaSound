@@ -96,6 +96,7 @@ public class JSMusic2 {
 	 */
 	public static void waitForSongDone(Sequencer sequencer) {
 		JSMusic.waitForSongDone(sequencer);
+		Delay.waitForMilliseconds(1000); // Add an extra second of delay, so last note finishes fading out.
 	}
 
 	/**
