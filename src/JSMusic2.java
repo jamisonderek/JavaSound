@@ -56,7 +56,7 @@ public class JSMusic2 {
 	 * Adds a note to the track for the specified duration.
 	 * 
 	 * @param track should be a {@link Track} returned from {@link #createTrack(Sequence, int)}. 
-	 * @param note should be the note to play.  60 is middle-C.
+	 * @param note should be the note to play.  See {@link JSNote} class for predefined notes.
 	 * @param startTime is the tick at which to start playing the note.
 	 * @param endTime is the tick at which to stop playing the note.
 	 */
