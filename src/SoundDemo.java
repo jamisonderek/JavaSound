@@ -4,6 +4,10 @@ public class SoundDemo {
 		SaintsSong song = new SaintsSong(JSInstrument.AcousticGrandPiano);
 		song.play();
 		song.close();
+		
+		ComputerTonesSong song2 = new ComputerTonesSong(JSInstrument.AcousticGrandPiano);
+		song2.play();
+		song2.close();
 	}
 
 }
